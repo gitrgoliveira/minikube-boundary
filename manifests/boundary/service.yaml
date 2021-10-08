@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boundary-api
+  labels:
+    app: boundary
+  namespace: boundary
+spec:
+  type: LoadBalancer
+  ports:
+   - port: 9200
+     targetPort: 9200
+     protocol: TCP
+  selector:
+    app: boundary
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boundary-cluster
+  labels:
+    app: boundary
+  namespace: boundary
+spec:
+  type: LoadBalancer
+  ports:
+   - port: 9201
+     targetPort: 9201
+     protocol: TCP
+  selector:
+    app: boundary

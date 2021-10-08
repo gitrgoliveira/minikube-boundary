@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boundary-worker
+  namespace: boundary
+  labels:
+    component: worker
+    env: k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: worker
+      env: k8s
+  template:
+    metadata:
+      labels:
+        component: worker
+        env: k8s
+    spec:
+      containers:
+      - name: boundary-worker
+        image: hashicorp/boundary:0.6.2
+        args: [ "server", "-config", "/etc/boundary/boundary-worker.hcl" ]
+        ports:
+        - containerPort: 9202
+        volumeMounts:
+        - mountPath: /etc/boundary
+          name: boundary-config
+      volumes:
+      - name: boundary-config
+        configMap:
+          name: boundary-k8s-worker-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boundary-worker
+  namespace: boundary
+spec:
+  type: LoadBalancer
+  ports:
+   - port: 9202
+     targetPort: 9202
+     protocol: TCP
+  selector:
+    component: worker
+    env: k8s
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: boundary
+  name: boundary-worker-config
+data:
+  boundary-worker.hcl: |
+    disable_mlock = true
+
+    listener "tcp" {
+      purpose = "proxy"
+      address = "0.0.0.0:9202"
+      tls_disable = "true"
+    }
+
+    worker {
+      name = "minikube-worker"
+      description = "A worker in minikube"
+      controllers = ["boundary-cluster"]
+      public_addr = "localhost:9202"
+      tags {
+        cluster = ["cluster-1"]
+      }
+    }
+    
+    kms "aead" {
+      purpose = "worker-auth"
+      aead_type = "aes-gcm"
+      key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+      key_id = "global_worker-auth"
+    }
