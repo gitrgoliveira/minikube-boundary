@@ -5,7 +5,7 @@ source helper.sh
 
 c1_kctx
 
-vault server -dev -dev-root-token-id=root -dev-plugin-dir=./vault-plugins 2>&1 > ./vault.log &
+vault server -dev -dev-root-token-id=root -dev-plugin-dir=./vault-plugins -combine-logs 2>&1 > ./vault.log &
 
 kubectl apply -f manifests/vault/
 secret_name=$(kubectl get serviceaccount/vault-dynamic-creds-backend -o jsonpath='{.secrets[0].name}')
