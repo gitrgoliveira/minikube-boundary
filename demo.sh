@@ -12,4 +12,11 @@ boundary authenticate password \
 
 unset BOUNDARY_RECOVERY_CONFIG
 
+# doing a vault demo?
+if [ -s vault.log ]; then
+vault read -field=kube_config k8s/service_account/postgres/viewer ttl_seconds=30 > kubeconfig.yaml
+export KUBECONFIG=./kubeconfig.yaml
+fi
+
 boundary connect kube -target-name=k8s-api  -target-scope-id $PROJECT_ID -- get pods --all-namespaces
+boundary connect kube -target-name=k8s-api  -target-scope-id $PROJECT_ID -- get pods -n postgres
