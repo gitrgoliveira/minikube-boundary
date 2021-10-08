@@ -1,3 +1,4 @@
 *.json
 *.log
 kubeconfig.yaml
+*.token

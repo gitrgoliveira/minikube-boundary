@@ -1,6 +1,6 @@
-# export HOST_IP=$(ipconfig getifaddr en0)
+export HOST_IP=$(ipconfig getifaddr en0)
 
-export VAULT_ADDR='http://127.0.0.1:8200'
+export VAULT_ADDR='http://$HOST_IP:8200'
 
 function c1_kctx {
     kubectl config use-context cluster-1

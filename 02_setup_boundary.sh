@@ -49,6 +49,6 @@ boundary targets create tcp -name="k8s-api" -description="k8s api" \
     -default-port=443 -scope-id=$PROJECT_ID -session-connection-limit="-1" > boundary_target.json
 fi
 
-TARGET_ID=$(cat boundary_target.json | jq -r .item.id)
+TARGET_ID=$(jq -r .item.id boundary_target.json)
 
 boundary targets add-host-sets -id=$TARGET_ID -host-set=$HOST_SET_ID
