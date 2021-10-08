@@ -22,7 +22,11 @@ spec:
       containers:
       - name: boundary-worker
         image: hashicorp/boundary:0.6.2
-        args: [ "server", "-config", "/etc/boundary/boundary-worker.hcl" ]
+        command:
+          - "/bin/sh"
+          - "-c"
+        args:
+          - "boundary server -config /etc/boundary/boundary-worker.hcl"
         ports:
         - containerPort: 9202
         volumeMounts:
@@ -31,7 +35,7 @@ spec:
       volumes:
       - name: boundary-config
         configMap:
-          name: boundary-k8s-worker-config
+          name: boundary-worker-config
 ---
 apiVersion: v1
 kind: Service

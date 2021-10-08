@@ -45,7 +45,7 @@ boundary host-sets add-hosts -id=$HOST_SET_ID -host=$HOST_ID || true
 
 if [ ! -s boundary_target.json ]; then
 boundary targets create tcp -name="k8s-api" -description="k8s api" \
-    -worker-filter='"cluster-1" in tags/cluster' \
+    -worker-filter='"cluster-1" in "/tags/cluster"' \
     -default-port=443 -scope-id=$PROJECT_ID -session-connection-limit="-1" > boundary_target.json
 fi
 
