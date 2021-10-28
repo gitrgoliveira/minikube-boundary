@@ -7,8 +7,9 @@ function c1_kctx {
 }
 
 function setup-boundary {
+    kubectl config use-context cluster-1
     export BOUNDARY_RECOVERY_CONFIG=./manifests/boundary/recovery.hcl
-    export BOUNDARY_ADDR=http://127.0.0.1:9200
+    export BOUNDARY_ADDR=http://$(kubectl -n boundary get svc boundary-api -o json | jq -r .status.loadBalancer.ingress[0].ip):9200
 }
 
 # PATH TO YOUR HOSTS FILE

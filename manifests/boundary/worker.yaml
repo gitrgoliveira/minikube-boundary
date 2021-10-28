@@ -43,10 +43,11 @@ metadata:
   name: boundary-worker
   namespace: boundary
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
    - port: 9202
      targetPort: 9202
+     nodePort: 30007
      protocol: TCP
   selector:
     component: worker
@@ -72,7 +73,7 @@ data:
       name = "minikube-worker"
       description = "A worker in minikube"
       controllers = ["boundary-cluster"]
-      public_addr = "localhost:9202"
+      public_addr = "worker.minikube:30007"
       tags {
         cluster = ["cluster-1"]
       }
