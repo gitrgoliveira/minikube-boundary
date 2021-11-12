@@ -15,7 +15,7 @@ kubectl apply -k ./manifests/boundary
 echo ".:boundary:. Waiting on boundary server"
 kubectl wait --for=condition=available --timeout=5m --namespace=boundary deployment.apps/boundary
 
-minikube tunnel --cleanup=true -p cluster-1 &
+nohup minikube tunnel --cleanup=true -p cluster-1 2>&1 > ./minikube.log &
 
 # adding the host
 # addhost "worker.minikube" $(kubectl -n boundary get svc boundary-worker -o json | jq -r .status.loadBalancer.ingress[0].ip)

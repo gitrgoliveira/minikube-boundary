@@ -10,6 +10,8 @@ vault server -dev -dev-root-token-id=root \
     -dev-listen-address=$HOST_IP:8200\
     -combine-logs 2>&1 > ./vault.log &
 
+sleep 5
+
 kubectl apply -f manifests/vault/
 secret_name=$(kubectl get serviceaccount/vault-dynamic-creds-backend -o jsonpath='{.secrets[0].name}')
 k8_cacert=$(kubectl get secret/${secret_name} -o jsonpath='{.data.ca\.crt}'|base64 --decode)
